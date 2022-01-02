@@ -1,0 +1,39 @@
+name: Azure Web App Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  AZURE_WEBAPP_NAME:
+  AZURE_WEBAPP_PATH: '.'
+  DOTNET_VERSION: '3.1'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+
+      - uses: actions/checkout@main
+
+      - name: Azure Login 
+        uses: azure/login@v1
+        with: 
+          creds: ${{secret.AZURE_CREDENTIALS}}
+      
+      - name: SETUP .Net Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{env.DOTNET_VERSION}}
+
+      - name: Build and Publish
+        run: |
+          dotnet build --configuration release
+          dotnet publish -c Release -o '${{env.AZURE_WEBAPP_PATH}}/myapp'
+      
+      - name: Deploy to App Service
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{env.AZURE_WEBAPP_NAME}}
+          package: ${{env.AZURE_WEBAPP_PATH}}
