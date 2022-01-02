@@ -6,7 +6,7 @@ on:
       - main
 
 env:
-  AZURE_WEBAPP_NAME:
+  AZURE_WEBAPP_NAME: mysivawebh
   AZURE_WEBAPP_PATH: '.'
   DOTNET_VERSION: '3.1'
 
@@ -20,7 +20,7 @@ jobs:
       - name: Azure Login 
         uses: azure/login@v1
         with: 
-          creds: ${{secret.AZURE_CREDENTIALS}}
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
       
       - name: SETUP .Net Core
         uses: actions/setup-dotnet@v1
