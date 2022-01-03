@@ -3,10 +3,10 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "location": {
-            "value": "#var_location#"
+            "value": "southeastasia"
         },
         "storageAccountName": {
-            "value": "#var_storageaccount#"
+            "value": "mygithubstgtest"
         },
         "accountType": {
             "value": "Standard_LRS"
