@@ -1,4 +1,4 @@
-name: Azure Web App Deploy using Github
+name: Azure Web App Deploy Github
 
 on:
   push:
