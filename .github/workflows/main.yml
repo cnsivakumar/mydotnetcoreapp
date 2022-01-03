@@ -1,4 +1,4 @@
-name: Azure Web App Deploy Github
+name: Azure Web App and ARM Deploy using Github Actions
 
 on:
   push:
