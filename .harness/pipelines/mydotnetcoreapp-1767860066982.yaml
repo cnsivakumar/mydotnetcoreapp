@@ -62,6 +62,8 @@ pipeline:
                     image: mcr.microsoft.com/azure-cli
                     shell: Sh
                     command: |
+                      set -e
+                      export AZURE_DEVOPS_EXT_ARTIFACTTOOL_USE_PYTHON=true
                       az extension add --name azure-devops
                       az devops configure --defaults \
                         organization=https://dev.azure.com/sivani12 \
