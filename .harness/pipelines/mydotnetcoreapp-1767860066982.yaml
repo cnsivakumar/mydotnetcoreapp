@@ -20,23 +20,46 @@ pipeline:
           execution:
             steps:
               - step:
-                  identifier: echo
-                  name: echo
+                  identifier: verify_repo
+                  name: Verify Repo
                   spec:
-                    command: echo hello world
-                  timeout: ""
+                    image: mcr.microsoft.com/dotnet/sdk:8.0
+                    shell: Sh
+                    command: |
+                      echo "Listing repo contents"
+                      ls -la
                   type: Run
               - step:
-                  identifier: dockerbuild
-                  name: docker_build
+                  type: Run
+                  name: Build and Publish DotNet
+                  identifier: build_publish
                   spec:
-                    caching: true
-                    connectorRef: <+input>
-                    repo: hello/world
-                    tags:
-                      - latest
-                  timeout: ""
-                  type: BuildAndPushDockerRegistry
+                    image: mcr.microsoft.com/dotnet/sdk:8.0
+                    shell: Sh
+                    command: |
+                      dotnet --version
+
+                      dotnet restore
+                      dotnet build -c Release --no-restore
+                      dotnet publish -c Release -o publish --no-build
+              - step:
+                  type: Run
+                  name: Zip Build Output
+                  identifier: zip_build
+                  spec:
+                    image: mcr.microsoft.com/dotnet/sdk:8.0
+                    shell: Sh
+                    command: |
+                      cd publish
+                      zip -r dotnet-app.zip .
+              - step:
+                  type: ArtifactoryUpload
+                  name: Upload DotNet Artifact
+                  identifier: upload_artifact
+                  spec:
+                    connectorRef: artifactory_connector
+                    target: generic-local/dotnet-app/<+pipeline.sequenceId>/dotnet-app.zip
+                    sourcePath: publish/dotnet-app.zip
           platform:
             arch: Amd64
             os: Linux
