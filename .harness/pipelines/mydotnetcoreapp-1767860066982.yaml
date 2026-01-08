@@ -59,16 +59,36 @@ pipeline:
                   name: Upload ZIP to Azure Artifacts
                   identifier: upload_azure_artifact
                   spec:
-                    image: mcr.microsoft.com/azure-cli
+                    image: ubuntu:22.04
                     shell: Sh
                     command: |
                       set -e
-                      export AZURE_DEVOPS_EXT_ARTIFACTTOOL_USE_PYTHON=true
+
+                      # Install dependencies
+                      apt-get update
+                      apt-get install -y \
+                        curl \
+                        apt-transport-https \
+                        ca-certificates \
+                        gnupg \
+                        lsb-release \
+                        python3 \
+                        python3-pip
+
+                      # Install Azure CLI
+                      curl -sL https://aka.ms/InstallAzureCLIDeb | bash
+
+                      # Install Azure DevOps extension
                       az extension add --name azure-devops
+
+                      # Login using PAT
+                      export AZURE_DEVOPS_EXT_PAT="<+secrets.getValue('AZURE_DEVOPS_PAT')>"
+
                       az devops configure --defaults \
                         organization=https://dev.azure.com/sivani12 \
                         project=mydotnetapp
-                      echo "<+secrets.getValue('azureartifacttoken')>" | az devops login
+
+                      # Upload as Universal Package
                       az artifacts universal publish \
                         --organization https://dev.azure.com/sivani12 \
                         --project mydotnetapp \
