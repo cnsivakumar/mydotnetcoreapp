@@ -50,6 +50,8 @@ pipeline:
                     image: mcr.microsoft.com/dotnet/sdk:8.0
                     shell: Sh
                     command: |
+                      apt-get update
+                      apt-get install -y zip
                       cd publish
                       zip -r dotnet-app.zip .
               - step:
