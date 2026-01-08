@@ -57,7 +57,7 @@ pipeline:
                   name: Upload DotNet Artifact
                   identifier: upload_artifact
                   spec:
-                    connectorRef: artifactory_connector
+                    connectorRef: harness_artifactrepo
                     target: generic-local/dotnet-app/<+pipeline.sequenceId>/dotnet-app.zip
                     sourcePath: publish/dotnet-app.zip
           platform:
