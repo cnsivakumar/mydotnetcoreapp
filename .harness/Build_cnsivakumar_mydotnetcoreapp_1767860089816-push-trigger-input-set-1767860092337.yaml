@@ -1,0 +1,14 @@
+inputSet:
+  name: Build_cnsivakumar_mydotnetcoreapp_1767860089816-push-trigger-input-set
+  identifier: Build_cnsivakumar_mydotnetcoreapp_1767860089816pushtriggerinputset
+  orgIdentifier: default
+  projectIdentifier: default_project
+  pipeline:
+    identifier: Build_cnsivakumar_mydotnetcoreapp_1767860089816
+    properties:
+      ci:
+        codebase:
+          build:
+            type: branch
+            spec:
+              branch: <+trigger.branch>
