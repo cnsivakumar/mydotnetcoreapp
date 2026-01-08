@@ -55,13 +55,25 @@ pipeline:
                       cd publish
                       zip -r dotnet-app.zip .
               - step:
-                  type: ArtifactoryUpload
-                  name: Upload DotNet Artifact
-                  identifier: upload_artifact
+                  type: Run
+                  name: Upload ZIP to Azure Artifacts
+                  identifier: upload_azure_artifact
                   spec:
-                    connectorRef: harness_artifactrepo
-                    target: generic-local/dotnet-app/<+pipeline.sequenceId>/dotnet-app.zip
-                    sourcePath: publish/dotnet-app.zip
+                    image: mcr.microsoft.com/azure-cli
+                    shell: Sh
+                    command: |
+                      az extension add --name azure-devops
+                      az devops configure --defaults \
+                        organization=https://dev.azure.com/sivani12 \
+                        project=mydotnetapp
+                      echo "<+secrets.getValue('AZURE_DEVOPS_PAT')>" | az devops login
+                      az artifacts universal publish \
+                        --organization https://dev.azure.com/sivani12 \
+                        --project mydotnetapp \
+                        --feed testharness \
+                        --name dotnet-app \
+                        --version 1.0.<+pipeline.sequenceId> \
+                        --path publish
           platform:
             arch: Amd64
             os: Linux
