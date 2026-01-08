@@ -82,7 +82,7 @@ pipeline:
                       az extension add --name azure-devops
 
                       # Login using PAT
-                      export AZURE_DEVOPS_EXT_PAT="<+secrets.getValue('AZURE_DEVOPS_PAT')>"
+                      export AZURE_DEVOPS_EXT_PAT="<+secrets.getValue('azureartifacttoken')>"
 
                       az devops configure --defaults \
                         organization=https://dev.azure.com/sivani12 \
