@@ -70,6 +70,7 @@ pipeline:
                       az artifacts universal publish \
                         --organization https://dev.azure.com/sivani12 \
                         --project mydotnetapp \
+                        --scope project \
                         --feed testharness \
                         --name dotnet-app \
                         --version 1.0.<+pipeline.sequenceId> \
